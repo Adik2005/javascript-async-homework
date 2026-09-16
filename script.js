@@ -269,3 +269,102 @@ runConcurrentButton.addEventListener("click", async () => {
 
   console.log("Concurrent results:", results);
 });
+
+// ==============================
+// EVENT LOOP DEMO
+// ==============================
+
+const eventLoopButton = document.getElementById("event-loop-btn");
+const expectedOutput = document.getElementById("expected-output");
+const actualOutput = document.getElementById("actual-output");
+const eventLoopExplanation = document.getElementById(
+  "event-loop-explanation"
+);
+
+const expectedLines = [
+  "Start",
+  "Async function start",
+  "End",
+  "Promise 1",
+  "Async function after await",
+  "Promise 2",
+  "Timer 1",
+  "Timer 2"
+];
+
+expectedOutput.textContent = expectedLines.join("\n");
+
+eventLoopButton.addEventListener("click", async () => {
+  const output = [];
+
+  function log(message) {
+    output.push(message);
+    console.log(message);
+
+    actualOutput.textContent = output.join("\n");
+  }
+
+  actualOutput.textContent = "";
+  eventLoopExplanation.innerHTML = "";
+
+  log("Start");
+
+  setTimeout(() => {
+    log("Timer 1");
+  }, 0);
+
+  Promise.resolve().then(() => {
+    log("Promise 1");
+  });
+
+  async function asyncExample() {
+    log("Async function start");
+
+    await Promise.resolve();
+
+    log("Async function after await");
+  }
+
+  asyncExample();
+
+  Promise.resolve().then(() => {
+    log("Promise 2");
+  });
+
+  setTimeout(() => {
+    log("Timer 2");
+  }, 0);
+
+  log("End");
+
+  setTimeout(() => {
+    eventLoopExplanation.innerHTML = `
+      <h3>Why this order happens</h3>
+
+      <p>
+        First, all synchronous code runs on the Call Stack.
+        That is why "Start", "Async function start", and "End"
+        appear before the asynchronous callbacks.
+      </p>
+
+      <p>
+        Promise callbacks and the continuation after await
+        go to the Microtask Queue.
+      </p>
+
+      <p>
+        setTimeout callbacks go to the Task Queue.
+      </p>
+
+      <p>
+        After the Call Stack is empty, the Event Loop processes
+        all microtasks before moving to timer tasks.
+      </p>
+
+      <p>
+        <strong>Order:</strong>
+        Call Stack → Microtask Queue → Task Queue → Event Loop.
+      </p>
+    `;
+  }, 100);
+});
