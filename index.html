@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>JavaScript Async Homework</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <header>
+    <h1>JavaScript Runtime and Async</h1>
+    <p>Closures, Promises, async/await, Event Loop, Tasks and Microtasks</p>
+  </header>
+
+  <main>
+
+    <section>
+      <h2>Tasks</h2>
+
+      <div id="tasks-container"></div>
+
+      <button id="run-all-btn">Run All Tasks</button>
+
+      <p id="all-status"></p>
+    </section>
+
+    <section>
+      <h2>Sequential vs Concurrent</h2>
+
+      <button id="run-sequential-btn">Run Sequential</button>
+      <button id="run-concurrent-btn">Run Concurrent</button>
+
+      <div id="comparison-output"></div>
+    </section>
+
+    <section>
+      <h2>Event Loop Demo</h2>
+
+      <p><strong>Expected output:</strong></p>
+
+      <pre id="expected-output"></pre>
+
+      <button id="event-loop-btn">Run Event Loop Demo</button>
+
+      <p><strong>Actual output:</strong></p>
+
+      <pre id="actual-output"></pre>
+
+      <div id="event-loop-explanation"></div>
+    </section>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
