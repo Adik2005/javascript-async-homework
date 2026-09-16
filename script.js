@@ -189,3 +189,83 @@ runAllButton.addEventListener("click", async () => {
 
   console.log("All task results:", results);
 });
+
+// ==============================
+// SEQUENTIAL VS CONCURRENT
+// ==============================
+
+const runSequentialButton = document.getElementById("run-sequential-btn");
+const runConcurrentButton = document.getElementById("run-concurrent-btn");
+const comparisonOutput = document.getElementById("comparison-output");
+
+runSequentialButton.addEventListener("click", async () => {
+  comparisonOutput.innerHTML = `
+    <p>Running sequentially...</p>
+  `;
+
+  const startTime = performance.now();
+
+  const results = [];
+
+  for (const task of tasks) {
+    try {
+      const result = await task.run();
+      results.push(result);
+    } catch (error) {
+      results.push(error);
+    }
+  }
+
+  const totalTime = Math.round(
+    performance.now() - startTime
+  );
+
+  comparisonOutput.innerHTML = `
+    <h3>Sequential Result</h3>
+
+    <p>
+      <strong>Total time:</strong>
+      ${totalTime} ms
+    </p>
+
+    <p>
+      Tasks run one after another.
+      The next task starts only after the previous one finishes.
+    </p>
+  `;
+
+  console.log("Sequential results:", results);
+});
+
+
+runConcurrentButton.addEventListener("click", async () => {
+  comparisonOutput.innerHTML = `
+    <p>Running concurrently...</p>
+  `;
+
+  const startTime = performance.now();
+
+  const results = await Promise.allSettled(
+    tasks.map(task => task.run())
+  );
+
+  const totalTime = Math.round(
+    performance.now() - startTime
+  );
+
+  comparisonOutput.innerHTML = `
+    <h3>Concurrent Result</h3>
+
+    <p>
+      <strong>Total time:</strong>
+      ${totalTime} ms
+    </p>
+
+    <p>
+      All tasks start almost at the same time.
+      The total time is usually close to the slowest single task.
+    </p>
+  `;
+
+  console.log("Concurrent results:", results);
+});
